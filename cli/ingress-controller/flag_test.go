@@ -105,6 +105,8 @@ func TestOverrideViaCLIFlags(t *testing.T) {
 		"--admin-tls-server-name", "kong-admin.example.com",
 		"--admin-ca-cert-file", "/path/to/ca-cert",
 
+		"--kong-custom-entities-secret", "foons/foosecretname",
+
 		"--watch-namespace", "foons",
 		"--ingress-class", "kong-internal",
 		"--election-id", "new-election-id",
@@ -139,6 +141,8 @@ func TestOverrideViaCLIFlags(t *testing.T) {
 		KongAdminTLSSkipVerify: true,
 		KongAdminTLSServerName: "kong-admin.example.com",
 		KongAdminCACertPath:    "/path/to/ca-cert",
+
+		KongCustomEntitiesSecret: "foons/foosecretname",
 
 		WatchNamespace: "foons",
 		IngressClass:   "kong-internal",
@@ -178,6 +182,8 @@ func TestOverrideViaEnvVars(t *testing.T) {
 		"CONTROLLER_ANONYMOUS_REPORTS":           "false",
 		"CONTROLLER_KONG_ADMIN_CONCURRENCY":      "100",
 		"CONTROLLER_KONG_ADMIN_TOKEN":            "my-secret-token",
+
+		"CONTROLLER_KONG_CUSTOM_ENTITIES_SECRET": "foons/barsecretname",
 	}
 	for k, v := range envs {
 		os.Setenv(k, v)
@@ -199,6 +205,8 @@ func TestOverrideViaEnvVars(t *testing.T) {
 		KongAdminTLSSkipVerify: false,
 		KongAdminTLSServerName: "",
 		KongAdminCACertPath:    "",
+
+		KongCustomEntitiesSecret: "foons/barsecretname",
 
 		WatchNamespace: "",
 		IngressClass:   "kong",

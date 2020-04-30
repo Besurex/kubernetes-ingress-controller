@@ -43,14 +43,15 @@ type cliConfig struct {
 	AdmissionWebhookKeyPath  string
 
 	// Kong connection details
-	KongAdminURL           string
-	KongWorkspace          string
-	KongAdminConcurrency   int
-	KongAdminFilterTags    []string
-	KongAdminHeaders       []string
-	KongAdminTLSSkipVerify bool
-	KongAdminTLSServerName string
-	KongAdminCACertPath    string
+	KongAdminURL             string
+	KongWorkspace            string
+	KongAdminConcurrency     int
+	KongAdminFilterTags      []string
+	KongAdminHeaders         []string
+	KongAdminTLSSkipVerify   bool
+	KongAdminTLSServerName   string
+	KongAdminCACertPath      string
+	KongCustomEntitiesSecret string
 
 	// Resource filtering
 	WatchNamespace string
@@ -155,6 +156,10 @@ Kong's Admin SSL certificate.`)
 		`Path to PEM-encoded CA certificate file to verify
 Kong's Admin SSL certificate.`)
 
+	flags.String("kong-custom-entities-secret", "",
+		`Secret containing custom entities that should be populated in DB-less
+mode of Kong. Takes the form of namespace/name.`)
+
 	// Resource filtering
 	flags.String("watch-namespace", apiv1.NamespaceAll,
 		`Namespace to watch for Ingress. Default is to watch all namespaces`)
@@ -178,7 +183,7 @@ should update the Ingress status IP/hostname.`)
 		`Indicates if the ingress controller should update the Ingress status 
 IP/hostname when the controller is being stopped.`)
 
-	// Rutnime behavior
+	// Runtime behavior
 	flags.Duration("sync-period", 600*time.Second,
 		`Relist and confirm cloud resources this often.`)
 	flags.Float32("sync-rate-limit", 0.3,
@@ -280,6 +285,9 @@ func parseFlags() (cliConfig, error) {
 	if kongAdminCACertPath != "" {
 		config.KongAdminCACertPath = kongAdminCACertPath
 	}
+
+	config.KongCustomEntitiesSecret = viper.GetString(
+		"kong-custom-entities-secret")
 
 	// Resource filtering
 	config.WatchNamespace = viper.GetString("watch-namespace")
